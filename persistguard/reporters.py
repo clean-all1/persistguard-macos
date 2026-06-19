@@ -61,7 +61,7 @@ def write_reports(
         if format_name not in renderers:
             raise ValueError(f"Unsupported report format: {format_name}")
         path = output_dir / f"{stem}.{format_name}"
-        path.write_text(renderers[format_name](result), encoding="utf-8", newline="")
+        path.write_text(renderers[format_name](result), encoding="utf-8")
         outputs.append(path)
     return outputs
 

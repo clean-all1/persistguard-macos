@@ -1,11 +1,13 @@
 import csv
 import io
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
 from persistguard.engine import RuleEngine
 from persistguard.models import AutoStartItem, CoverageEntry, ScanResult
-from persistguard.reporters import render_csv, render_html, render_json, terminal_summary
+from persistguard.reporters import render_csv, render_html, render_json, terminal_summary, write_reports
 
 
 class ReporterTests(unittest.TestCase):
@@ -45,6 +47,12 @@ class ReporterTests(unittest.TestCase):
         text = terminal_summary(self.result, color=False)
         self.assertIn("扫描完成", text)
         self.assertIn("测试项", text)
+
+    def test_write_reports_creates_all_formats(self):
+        with tempfile.TemporaryDirectory() as td:
+            outputs = write_reports(self.result, Path(td), formats=("html", "json", "csv"), stem="scan")
+            self.assertEqual([path.name for path in outputs], ["scan.html", "scan.json", "scan.csv"])
+            self.assertTrue(all(path.is_file() and path.stat().st_size > 0 for path in outputs))
 
 
 if __name__ == "__main__":
