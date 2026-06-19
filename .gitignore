@@ -1,0 +1,17 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+.coverage
+.pytest_cache/
+tmp/
+!tests/fixtures/demo_root/tmp/
+!tests/fixtures/demo_root/tmp/benign.sh
+*.pdf
+*.docx
+reports/**
+!reports/.gitkeep
+demo-fixture/
