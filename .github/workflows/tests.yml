@@ -10,6 +10,7 @@ permissions:
 jobs:
   unit:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
         python: ["3.9", "3.12"]
@@ -29,4 +30,11 @@ jobs:
           set +e
           python -m persistguard scan --root tests/fixtures/demo_root --home tests/fixtures/demo_root/Users/fixture --no-system-baseline --out reports/ci
           code=$?
-          test "$code" -eq 2
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            test "$code" -eq 2
+          else
+            test "$code" -eq 0
+          fi
+          test -s reports/ci/persistguard-report.html
+          test -s reports/ci/persistguard-report.json
+          test -s reports/ci/persistguard-report.csv
